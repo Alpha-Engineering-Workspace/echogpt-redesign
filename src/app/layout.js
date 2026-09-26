@@ -1,4 +1,5 @@
 import "./globals.css";
+import AuthProvider from "@/components/providers/AuthProvider";
 
 export const metadata = {
   title: {
@@ -6,14 +7,15 @@ export const metadata = {
     template: "%s | EchoGPT",
   },
 
-  description:
-    "One intelligent workspace for multiple AI models.",
+  description: "One intelligent workspace for multiple AI models.",
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <AuthProvider>{children}</AuthProvider>
+      </body>
     </html>
   );
 }
