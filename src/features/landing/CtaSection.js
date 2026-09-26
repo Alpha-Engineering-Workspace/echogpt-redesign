@@ -2,32 +2,50 @@ import { ArrowRight } from "lucide-react";
 
 import Button from "@/components/common/Button";
 import Container from "@/components/common/Container";
+import Reveal from "@/components/common/Reveal";
 
+/**
+ * Final CTA — SOLID violet panel (not glass). Inverted hierarchy:
+ * primary button is white on violet (high contrast), secondary is outlined white.
+ */
 export default function CtaSection() {
   return (
-    <section className="bg-white pb-20 transition-colors dark:bg-gray-950 sm:pb-24">
-      <Container>
-        <div className="overflow-hidden rounded-3xl bg-[#6857f5] px-6 py-14 text-center text-white shadow-xl shadow-violet-500/10 sm:px-10 sm:py-16 dark:shadow-violet-950/30">
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-            Ready to work smarter with AI?
-          </h2>
+    <section className="pb-24 pt-8">
+      <Container size="wide">
+        <Reveal variant="fade-up">
+          <div className="relative overflow-hidden rounded-lg bg-[var(--primary)] px-8 py-16 text-white shadow-pop sm:px-14 sm:py-20">
+            {/* Subtle radial highlight inside the violet panel */}
+            <div
+              className="pointer-events-none absolute inset-0 opacity-30"
+              style={{
+                backgroundImage:
+                  "radial-gradient(circle at top right, rgba(255,255,255,0.18), transparent 50%)",
+              }}
+            />
 
-          <p className="mx-auto mt-4 max-w-xl leading-7 text-violet-100">
-            Start using EchoGPT and bring your AI tools into one simple
-            workspace.
-          </p>
+            <div className="relative grid items-center gap-8 lg:grid-cols-[1.4fr_1fr]">
+              <div>
+                <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+                  Ready to work smarter with AI?
+                </h2>
+                <p className="mt-3 max-w-md text-sm leading-7 text-white/80 sm:text-base">
+                  Start using EchoGPT and bring every AI tool into one focused
+                  workspace. Free to try, no credit card required.
+                </p>
+              </div>
 
-          <div className="mt-8 flex justify-center">
-            <Button
-              href="/register"
-              variant="secondary"
-              className="gap-2 border-white bg-white px-6 py-3 text-gray-950 hover:bg-violet-50 dark:border-white dark:bg-white dark:text-gray-950 dark:hover:bg-violet-50"
-            >
-              Get Started
-              <ArrowRight size={17} />
-            </Button>
+              <div className="flex flex-col gap-3 sm:flex-row lg:justify-end">
+                <Button href="/register" variant="on-violet" size="lg">
+                  Create free account
+                  <ArrowRight size={15} />
+                </Button>
+                <Button href="/chat" variant="on-violet-outline" size="lg">
+                  Try the demo
+                </Button>
+              </div>
+            </div>
           </div>
-        </div>
+        </Reveal>
       </Container>
     </section>
   );

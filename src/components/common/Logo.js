@@ -1,20 +1,34 @@
 import Link from "next/link";
 import { Sparkles } from "lucide-react";
 
-export default function Logo() {
+export default function Logo({ size = "md", showText = true, href = "/" }) {
+  const dimensions = {
+    sm: { wrapper: "h-7 w-7", icon: 14, text: "text-base" },
+    md: { wrapper: "h-8 w-8", icon: 16, text: "text-base" },
+    lg: { wrapper: "h-9 w-9", icon: 18, text: "text-lg" },
+  };
+
+  const d = dimensions[size];
+
   return (
     <Link
-      href="/"
-      className="flex items-center gap-2"
+      href={href}
+      className="group inline-flex items-center gap-2"
       aria-label="EchoGPT home"
     >
-      <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#6857f5] text-white">
-        <Sparkles size={18} />
-      </div>
-
-      <span className="text-xl font-bold tracking-tight text-gray-950 dark:text-white">
-        EchoGPT
+      <span
+        className={`flex ${d.wrapper} items-center justify-center rounded-md bg-[var(--primary)] text-white transition-transform group-hover:scale-105`}
+      >
+        <Sparkles size={d.icon} strokeWidth={2.25} />
       </span>
+
+      {showText && (
+        <span
+          className={`${d.text} font-semibold tracking-tight text-fg`}
+        >
+          EchoGPT
+        </span>
+      )}
     </Link>
   );
 }

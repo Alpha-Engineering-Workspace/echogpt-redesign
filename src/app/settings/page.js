@@ -6,15 +6,17 @@ export default function SettingsPage() {
     <>
       <AppNavbar />
 
-      <main className="min-h-[calc(100vh-64px)] bg-gray-50 px-4 py-10 transition-colors dark:bg-gray-950 sm:px-6">
+      <main className="min-h-[calc(100vh-56px)] bg-surface px-4 py-10 sm:px-6">
         <div className="mx-auto max-w-3xl">
           <div className="mb-8">
-            <h1 className="text-3xl font-bold tracking-tight text-gray-950 dark:text-white">
+            <p className="text-xs font-semibold uppercase tracking-wider text-accent">
               Settings
+            </p>
+            <h1 className="mt-2 text-3xl font-semibold tracking-tight text-fg">
+              Preferences
             </h1>
-
-            <p className="mt-2 text-gray-500 dark:text-gray-400">
-              Manage your account and EchoGPT preferences.
+            <p className="mt-2 text-sm text-muted">
+              Manage your EchoGPT profile, appearance, and AI defaults.
             </p>
           </div>
 

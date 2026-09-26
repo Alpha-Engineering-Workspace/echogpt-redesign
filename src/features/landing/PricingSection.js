@@ -1,63 +1,72 @@
+"use client";
+
 import { Check } from "lucide-react";
 
 import Button from "@/components/common/Button";
 import Container from "@/components/common/Container";
+import Reveal from "@/components/common/Reveal";
 
 export default function PricingSection() {
   return (
-    <section
-      id="pricing"
-      className="bg-gray-50 py-20 transition-colors dark:bg-gray-900 sm:py-24"
-    >
-      <Container>
-        <div className="mx-auto max-w-2xl text-center">
-          <p className="text-sm font-semibold text-[#6857f5] dark:text-violet-400">
-            PRICING
-          </p>
-
-          <h2 className="mt-3 text-3xl font-bold tracking-tight text-gray-950 dark:text-white sm:text-4xl">
-            Start simple. Upgrade when you need more.
-          </h2>
-
-          <p className="mt-4 leading-7 text-gray-600 dark:text-gray-400">
-            Explore EchoGPT and choose the experience that fits your workflow.
-          </p>
+    <section id="pricing" className="section-y">
+      <Container size="wide">
+        <div className="mx-auto max-w-3xl text-center">
+          <Reveal variant="fade-up">
+            <p className="text-xs font-semibold uppercase tracking-wider text-accent">
+              Pricing
+            </p>
+            <h2 className="mt-3 text-3xl font-semibold tracking-tight text-fg sm:text-4xl">
+              Start free. Upgrade when you need more.
+            </h2>
+            <p className="mt-4 leading-7 text-muted">
+              Explore EchoGPT and choose the experience that fits your
+              workflow.
+            </p>
+          </Reveal>
         </div>
 
-        <div className="mx-auto mt-12 grid max-w-4xl gap-6 md:grid-cols-2">
-          <PricingCard
-            title="Free"
-            price="$0"
-            description="For exploring EchoGPT and everyday AI tasks."
-            features={[
-              "Access to basic AI chat",
-              "Conversation history",
-              "Basic browser features",
-              "Responsive web application",
-            ]}
-            buttonText="Get Started"
-            buttonHref="/register"
-          />
+        <div className="mx-auto mt-14 grid max-w-3xl gap-4 md:grid-cols-2">
+          <Reveal variant="fade-up">
+            <PricingCard
+              tier="Free"
+              price="$0"
+              period="/ month"
+              description="For exploring EchoGPT and everyday AI tasks."
+              features={[
+                "Access to EchoGPT model",
+                "Conversation history",
+                "Basic browser features",
+                "Responsive web application",
+              ]}
+              ctaText="Get started"
+              ctaHref="/register"
+              variant="secondary"
+            />
+          </Reveal>
 
-          <PricingCard
-            title="Pro"
-            price="$12"
-            description="For users who want more models and productivity tools."
-            features={[
-              "Everything in Free",
-              "Access to premium models",
-              "Advanced browser actions",
-              "Higher usage limits",
-            ]}
-            buttonText="Explore Pro"
-            buttonHref="/register"
-            highlighted
-          />
+          <Reveal variant="fade-up" delay={0.08}>
+            <PricingCard
+              tier="Pro"
+              price="$12"
+              period="/ month"
+              description="For users who want more models and productivity tools."
+              features={[
+                "Everything in Free",
+                "Access to GPT, Claude, Gemini",
+                "Advanced browser actions",
+                "Higher usage limits",
+              ]}
+              ctaText="Explore Pro"
+              ctaHref="/register"
+              variant="primary"
+              inverted
+            />
+          </Reveal>
         </div>
 
-        <p className="mt-6 text-center text-xs text-gray-500 dark:text-gray-500">
-          Pricing shown here is part of the redesign concept and can be updated
-          to match the production product.
+        <p className="mt-8 text-center text-xs text-muted-foreground">
+          Pricing shown here is part of the redesign concept and can be
+          updated to match the production product.
         </p>
       </Container>
     </section>
@@ -65,66 +74,99 @@ export default function PricingSection() {
 }
 
 function PricingCard({
-  title,
+  tier,
   price,
+  period,
   description,
   features,
-  buttonText,
-  buttonHref,
-  highlighted = false,
+  ctaText,
+  ctaHref,
+  inverted = false,
+  variant,
 }) {
   return (
     <div
-      className={`rounded-3xl border p-7 transition-colors ${
-        highlighted
-          ? "border-[#6857f5] bg-white shadow-xl shadow-violet-100/40 dark:bg-gray-950 dark:shadow-violet-950/10"
-          : "border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-950"
+      className={`flex h-full flex-col rounded-lg p-7 transition-shadow ${
+        inverted
+          ? "bg-[var(--primary)] text-white shadow-glow"
+          : "border border-border bg-surface-elevated text-fg shadow-1"
       }`}
     >
-      {highlighted && (
-        <span className="mb-5 inline-block rounded-full bg-violet-100 px-3 py-1 text-xs font-semibold text-violet-700 dark:bg-violet-500/15 dark:text-violet-300">
-          Recommended
-        </span>
-      )}
+      <div className="flex items-baseline justify-between">
+        <h3
+          className={`text-lg font-semibold ${
+            inverted ? "text-white" : "text-fg"
+          }`}
+        >
+          {tier}
+        </h3>
+        {inverted && (
+          <span className="rounded-xs bg-white/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-white">
+            Recommended
+          </span>
+        )}
+      </div>
 
-      <h3 className="text-xl font-semibold text-gray-950 dark:text-white">
-        {title}
-      </h3>
-
-      <div className="mt-4 flex items-end gap-1">
-        <span className="text-4xl font-bold text-gray-950 dark:text-white">
+      <div className="mt-5 flex items-end gap-1">
+        <span
+          className={`text-4xl font-semibold tracking-tight ${
+            inverted ? "text-white" : "text-fg"
+          }`}
+        >
           {price}
         </span>
-
-        <span className="pb-1 text-sm text-gray-500 dark:text-gray-400">
-          / month
+        <span
+          className={`pb-1 text-xs ${
+            inverted ? "text-white/70" : "text-muted"
+          }`}
+        >
+          {period}
         </span>
       </div>
 
-      <p className="mt-4 text-sm leading-6 text-gray-600 dark:text-gray-400">
+      <p
+        className={`mt-3 text-sm leading-6 ${
+          inverted ? "text-white/80" : "text-muted"
+        }`}
+      >
         {description}
       </p>
 
-      <div className="my-6 border-t border-gray-200 dark:border-gray-800" />
+      <div
+        className={`my-6 border-t ${
+          inverted ? "border-white/15" : "border-border"
+        }`}
+      />
 
-      <div className="space-y-3">
+      <div className="space-y-2.5">
         {features.map((feature) => (
           <div
             key={feature}
-            className="flex items-center gap-3 text-sm text-gray-700 dark:text-gray-300"
+            className={`flex items-center gap-2.5 text-sm ${
+              inverted ? "text-white" : "text-fg"
+            }`}
           >
-            <Check size={17} className="text-[#6857f5] dark:text-violet-400" />
+            <span
+              className={`inline-flex h-4 w-4 items-center justify-center rounded-xs ${
+                inverted
+                  ? "bg-white/15 text-white"
+                  : "bg-accent-soft-strong text-accent"
+              }`}
+            >
+              <Check size={11} strokeWidth={3} />
+            </span>
             {feature}
           </div>
         ))}
       </div>
 
       <Button
-        href={buttonHref}
-        variant={highlighted ? "primary" : "secondary"}
+        href={ctaHref}
+        variant={variant}
         className="mt-7 w-full"
+        size="md"
       >
-        {buttonText}
+        {ctaText}
       </Button>
     </div>
   );

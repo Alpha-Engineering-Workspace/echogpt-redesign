@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 
-export default function ThemeToggle() {
+export default function ThemeToggle({ className = "" }) {
   const { resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
@@ -14,7 +14,10 @@ export default function ThemeToggle() {
 
   if (!mounted) {
     return (
-      <div className="h-9 w-9 rounded-lg border border-gray-200" />
+      <div
+        className={`h-9 w-9 rounded-md border border-border ${className}`}
+        aria-hidden
+      />
     );
   }
 
@@ -25,17 +28,28 @@ export default function ThemeToggle() {
       type="button"
       onClick={() => setTheme(isDark ? "light" : "dark")}
       aria-label={
-        isDark
-          ? "Switch to light mode"
-          : "Switch to dark mode"
+        isDark ? "Switch to light mode" : "Switch to dark mode"
       }
-      className="flex h-9 w-9 items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-700 transition hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200 dark:hover:bg-gray-800"
+      className={`inline-flex h-9 w-9 items-center justify-center rounded-md border border-border bg-surface-elevated text-muted transition hover:bg-surface-hover hover:text-fg ${className}`}
     >
-      {isDark ? (
-        <Sun size={17} />
-      ) : (
-        <Moon size={17} />
-      )}
+      <span className="relative h-4 w-4">
+        <Sun
+          size={16}
+          className={`absolute inset-0 transition-all ${
+            isDark
+              ? "rotate-90 scale-0 opacity-0"
+              : "rotate-0 scale-100 opacity-100"
+          }`}
+        />
+        <Moon
+          size={16}
+          className={`absolute inset-0 transition-all ${
+            isDark
+              ? "rotate-0 scale-100 opacity-100"
+              : "-rotate-90 scale-0 opacity-0"
+          }`}
+        />
+      </span>
     </button>
   );
 }

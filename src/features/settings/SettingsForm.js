@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useTheme } from "next-themes";
+import { Loader2 } from "lucide-react";
 
 export default function SettingsForm() {
   const { data: session, update } = useSession();
@@ -16,41 +17,30 @@ export default function SettingsForm() {
 
   const [isSaving, setIsSaving] = useState(false);
   const [message, setMessage] = useState("");
+  const [isError, setIsError] = useState(false);
 
   useEffect(() => {
     if (session?.user?.name) {
       setDisplayName(session.user.name);
     }
 
-    const savedSettings = localStorage.getItem(
-      "echogpt-settings"
-    );
-
-    if (savedSettings) {
-      const settings = JSON.parse(savedSettings);
-
-      setDefaultModel(
-        settings.defaultModel || "EchoGPT"
-      );
-
-      setCompactMode(
-        settings.compactMode || false
-      );
-
-      setSaveHistory(
-        settings.saveHistory !== false
-      );
-
-      setExtensionContext(
-        settings.extensionContext !== false
-      );
-    }
+    try {
+      const saved = localStorage.getItem("echogpt-settings");
+      if (saved) {
+        const settings = JSON.parse(saved);
+        setDefaultModel(settings.defaultModel || "EchoGPT");
+        setCompactMode(settings.compactMode || false);
+        setSaveHistory(settings.saveHistory !== false);
+        setExtensionContext(settings.extensionContext !== false);
+      }
+    } catch {}
   }, [session]);
 
   async function handleSave(event) {
     event.preventDefault();
 
     if (!displayName.trim()) {
+      setIsError(true);
       setMessage("Display name is required.");
       return;
     }
@@ -61,20 +51,15 @@ export default function SettingsForm() {
 
       const response = await fetch("/api/settings", {
         method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: displayName,
-        }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: displayName }),
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        setMessage(
-          data.message || "Could not save settings."
-        );
+        setIsError(true);
+        setMessage(data.message || "Could not save settings.");
         return;
       }
 
@@ -88,14 +73,13 @@ export default function SettingsForm() {
         })
       );
 
-      await update({
-        name: displayName.trim(),
-      });
+      await update({ name: displayName.trim() });
 
+      setIsError(false);
       setMessage("Settings saved successfully.");
-    } catch (error) {
-      console.error("Settings error:", error);
-
+    } catch (err) {
+      console.error("Settings error:", err);
+      setIsError(true);
       setMessage("Could not save settings.");
     } finally {
       setIsSaving(false);
@@ -103,80 +87,50 @@ export default function SettingsForm() {
   }
 
   return (
-    <form
-      onSubmit={handleSave}
-      className="space-y-6"
-    >
-      {/* Profile */}
-      <section className="rounded-2xl border border-gray-200 bg-white p-6 transition-colors dark:border-gray-800 dark:bg-gray-900">
-        <h2 className="text-lg font-semibold text-gray-950 dark:text-white">
-          Profile
-        </h2>
-
-        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-          Basic information for your EchoGPT account.
-        </p>
-
-        <div className="mt-5">
+    <form onSubmit={handleSave} className="space-y-4">
+      <Section
+        title="Profile"
+        description="Basic information for your EchoGPT account."
+      >
+        <div>
           <label
             htmlFor="displayName"
-            className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+            className="mb-1.5 block text-xs font-medium text-fg"
           >
             Display name
           </label>
-
           <input
             id="displayName"
             value={displayName}
-            onChange={(event) =>
-              setDisplayName(event.target.value)
-            }
-            className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-950 outline-none transition placeholder:text-gray-400 focus:border-gray-400 dark:border-gray-700 dark:bg-gray-950 dark:text-white dark:focus:border-gray-500"
+            onChange={(e) => setDisplayName(e.target.value)}
+            className="w-full rounded-md border border-border bg-bg px-3 py-2.5 text-sm text-fg outline-none transition placeholder:text-muted-foreground focus:border-accent focus:shadow-glow"
           />
-
-          <p className="mt-2 text-xs text-gray-400 dark:text-gray-500">
+          <p className="mt-1.5 text-[10px] text-muted-foreground">
             {session?.user?.email}
           </p>
         </div>
-      </section>
+      </Section>
 
-      {/* Appearance */}
-      <section className="rounded-2xl border border-gray-200 bg-white p-6 transition-colors dark:border-gray-800 dark:bg-gray-900">
-        <h2 className="text-lg font-semibold text-gray-950 dark:text-white">
-          Appearance
-        </h2>
-
-        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-          Customize how EchoGPT looks and feels.
-        </p>
-
-        <div className="mt-5">
+      <Section
+        title="Appearance"
+        description="Customize how EchoGPT looks and feels."
+      >
+        <div>
           <label
             htmlFor="theme"
-            className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+            className="mb-1.5 block text-xs font-medium text-fg"
           >
             Theme preference
           </label>
-
           <select
             id="theme"
             value={theme || "system"}
-            onChange={(event) =>
-              setTheme(event.target.value)
-            }
-            className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-950 outline-none transition focus:border-gray-400 dark:border-gray-700 dark:bg-gray-950 dark:text-white dark:focus:border-gray-500"
+            onChange={(e) => setTheme(e.target.value)}
+            className="w-full rounded-md border border-border bg-bg px-3 py-2.5 text-sm text-fg outline-none transition focus:border-accent"
           >
-            <option value="system">
-              System
-            </option>
-
-            <option value="light">
-              Light
-            </option>
-
-            <option value="dark">
-              Dark
-            </option>
+            <option value="system">System</option>
+            <option value="light">Light</option>
+            <option value="dark">Dark</option>
           </select>
         </div>
 
@@ -184,37 +138,26 @@ export default function SettingsForm() {
           title="Compact mode"
           description="Use tighter spacing inside the EchoGPT interface."
           enabled={compactMode}
-          onChange={() =>
-            setCompactMode(!compactMode)
-          }
+          onChange={() => setCompactMode(!compactMode)}
         />
-      </section>
+      </Section>
 
-      {/* AI Preferences */}
-      <section className="rounded-2xl border border-gray-200 bg-white p-6 transition-colors dark:border-gray-800 dark:bg-gray-900">
-        <h2 className="text-lg font-semibold text-gray-950 dark:text-white">
-          AI Preferences
-        </h2>
-
-        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-          Choose your preferred EchoGPT model.
-        </p>
-
-        <div className="mt-5">
+      <Section
+        title="AI preferences"
+        description="Choose your preferred EchoGPT model."
+      >
+        <div>
           <label
             htmlFor="defaultModel"
-            className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+            className="mb-1.5 block text-xs font-medium text-fg"
           >
             Default AI model
           </label>
-
           <select
             id="defaultModel"
             value={defaultModel}
-            onChange={(event) =>
-              setDefaultModel(event.target.value)
-            }
-            className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-950 outline-none transition focus:border-gray-400 dark:border-gray-700 dark:bg-gray-950 dark:text-white dark:focus:border-gray-500"
+            onChange={(e) => setDefaultModel(e.target.value)}
+            className="w-full rounded-md border border-border bg-bg px-3 py-2.5 text-sm text-fg outline-none transition focus:border-accent"
           >
             <option>EchoGPT</option>
             <option>GPT</option>
@@ -222,39 +165,34 @@ export default function SettingsForm() {
             <option>Gemini</option>
           </select>
         </div>
-      </section>
+      </Section>
 
-      {/* Conversations */}
-      <section className="rounded-2xl border border-gray-200 bg-white p-6 transition-colors dark:border-gray-800 dark:bg-gray-900">
-        <h2 className="text-lg font-semibold text-gray-950 dark:text-white">
-          Conversations
-        </h2>
-
-        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-          Control conversation and extension preferences.
-        </p>
-
+      <Section
+        title="Conversations"
+        description="Control conversation and extension preferences."
+      >
         <SettingToggle
           title="Conversation history"
           description="Remember your conversation preference."
           enabled={saveHistory}
-          onChange={() =>
-            setSaveHistory(!saveHistory)
-          }
+          onChange={() => setSaveHistory(!saveHistory)}
         />
-
         <SettingToggle
           title="Extension page context"
           description="Allow the extension to use webpage context."
           enabled={extensionContext}
-          onChange={() =>
-            setExtensionContext(!extensionContext)
-          }
+          onChange={() => setExtensionContext(!extensionContext)}
         />
-      </section>
+      </Section>
 
       {message && (
-        <div className="rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-600 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300">
+        <div
+          className={`rounded-md border px-3 py-2 text-xs ${
+            isError
+              ? "border-danger/30 bg-danger/10 text-danger"
+              : "border-success/30 bg-success/10 text-success"
+          }`}
+        >
           {message}
         </div>
       )}
@@ -263,50 +201,52 @@ export default function SettingsForm() {
         <button
           type="submit"
           disabled={isSaving}
-          className="rounded-xl bg-gray-950 px-6 py-3 text-sm font-medium text-white transition hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-white dark:text-gray-950 dark:hover:bg-gray-200"
+          className="inline-flex h-9 items-center gap-1.5 rounded-md bg-[var(--primary)] px-4 text-xs font-semibold text-white transition hover:bg-[var(--primary-hover)] disabled:cursor-not-allowed disabled:opacity-60"
         >
-          {isSaving
-            ? "Saving..."
-            : "Save Settings"}
+          {isSaving ? (
+            <>
+              <Loader2 size={12} className="animate-spin" />
+              Saving...
+            </>
+          ) : (
+            "Save Settings"
+          )}
         </button>
       </div>
     </form>
   );
 }
 
-function SettingToggle({
-  title,
-  description,
-  enabled,
-  onChange,
-}) {
+function Section({ title, description, children }) {
   return (
-    <div className="mt-5 flex items-center justify-between gap-5 border-t border-gray-100 pt-5 dark:border-gray-800">
-      <div>
-        <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
-          {title}
-        </p>
+    <section className="rounded-md border border-border bg-surface-elevated p-5">
+      <h2 className="text-sm font-semibold text-fg">{title}</h2>
+      <p className="mt-1 text-xs text-muted">{description}</p>
+      <div className="mt-4 space-y-4">{children}</div>
+    </section>
+  );
+}
 
-        <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-          {description}
-        </p>
+function SettingToggle({ title, description, enabled, onChange }) {
+  return (
+    <div className="flex items-center justify-between gap-4 border-t border-border pt-4 first:border-t-0 first:pt-0">
+      <div>
+        <p className="text-sm font-medium text-fg">{title}</p>
+        <p className="mt-0.5 text-xs text-muted">{description}</p>
       </div>
 
       <button
         type="button"
         onClick={onChange}
         aria-pressed={enabled}
-        className={`relative h-6 w-11 shrink-0 rounded-full transition ${
-          enabled
-            ? "bg-gray-950 dark:bg-white"
-            : "bg-gray-300 dark:bg-gray-700"
+        aria-label={`Toggle ${title}`}
+        className={`relative h-5 w-9 shrink-0 rounded-full transition ${
+          enabled ? "bg-accent" : "bg-border"
         }`}
       >
         <span
-          className={`absolute top-1 h-4 w-4 rounded-full transition ${
-            enabled
-              ? "left-6 bg-white dark:bg-gray-950"
-              : "left-1 bg-white"
+          className={`absolute top-0.5 h-4 w-4 rounded-full bg-white shadow-1 transition-all ${
+            enabled ? "left-4" : "left-0.5"
           }`}
         />
       </button>

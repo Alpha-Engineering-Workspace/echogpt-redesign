@@ -1,78 +1,100 @@
 "use client";
 
 import { useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 
 import Container from "@/components/common/Container";
+import Reveal from "@/components/common/Reveal";
 import { faqs } from "@/data/faqs";
 
 export default function FaqSection() {
   const [openIndex, setOpenIndex] = useState(0);
 
   function handleToggle(index) {
-    if (openIndex === index) {
-      setOpenIndex(null);
-      return;
-    }
-
-    setOpenIndex(index);
+    setOpenIndex(openIndex === index ? null : index);
   }
 
   return (
-    <section
-      id="faq"
-      className="bg-white py-20 transition-colors dark:bg-gray-950 sm:py-24"
-    >
-      <Container>
-        <div className="mx-auto max-w-2xl">
-          <div className="text-center">
-            <p className="text-sm font-semibold text-[#6857f5] dark:text-violet-400">
+    <section id="faq" className="section-y">
+      <Container size="default">
+        <div className="grid gap-12 lg:grid-cols-[1fr_2fr] lg:gap-16">
+          {/* Left intro */}
+          <Reveal variant="fade-up">
+            <p className="text-xs font-semibold uppercase tracking-wider text-accent">
               FAQ
             </p>
-
-            <h2 className="mt-3 text-3xl font-bold tracking-tight text-gray-950 dark:text-white sm:text-4xl">
-              Frequently asked questions
+            <h2 className="mt-3 text-3xl font-semibold tracking-tight text-fg sm:text-4xl">
+              Answers, in plain language
             </h2>
-          </div>
+            <p className="mt-4 leading-7 text-muted">
+              Everything you might wonder before signing up. If we missed
+              something, reach out and we&apos;ll add it.
+            </p>
+          </Reveal>
 
-          <div className="mt-10 space-y-3">
-            {faqs.map((faq, index) => {
-              const isOpen = openIndex === index;
-
-              return (
-                <div
-                  key={faq.question}
-                  className="overflow-hidden rounded-2xl border border-gray-200 bg-white transition-colors dark:border-gray-800 dark:bg-gray-900"
-                >
-                  <button
-                    type="button"
-                    onClick={() => handleToggle(index)}
-                    className="flex w-full items-center justify-between gap-5 p-5 text-left transition hover:bg-gray-50 dark:hover:bg-gray-800/70"
-                    aria-expanded={isOpen}
+          {/* Right list */}
+          <Reveal variant="fade-up" delay={0.05}>
+            <ul className="border-t border-border">
+              {faqs.map((faq, index) => {
+                const isOpen = openIndex === index;
+                return (
+                  <li
+                    key={faq.question}
+                    className="border-b border-border"
                   >
-                    <span className="font-medium text-gray-950 dark:text-white">
-                      {faq.question}
-                    </span>
+                    <button
+                      type="button"
+                      onClick={() => handleToggle(index)}
+                      aria-expanded={isOpen}
+                      className="flex w-full min-h-[72px] items-start gap-4 py-5 text-left transition"
+                    >
+                      <span className="mt-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-xs bg-accent-soft text-[11px] font-semibold text-accent">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+                      <span className="flex-1 text-base font-medium leading-snug text-fg">
+                        {faq.question}
+                      </span>
+                      <span
+                        className={`mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-xs border transition ${
+                          isOpen
+                            ? "border-accent bg-accent-soft text-accent"
+                            : "border-border bg-surface-elevated text-muted"
+                        }`}
+                      >
+                        <ChevronDown
+                          size={14}
+                          strokeWidth={2.25}
+                          className={`transition-transform duration-300 ${
+                            isOpen ? "rotate-180" : ""
+                          }`}
+                        />
+                      </span>
+                    </button>
 
-                    <ChevronDown
-                      size={19}
-                      className={`shrink-0 text-gray-500 transition dark:text-gray-400 ${
-                        isOpen ? "rotate-180" : ""
-                      }`}
-                    />
-                  </button>
-
-                  {isOpen && (
-                    <div className="border-t border-gray-100 px-5 py-4 dark:border-gray-800">
-                      <p className="text-sm leading-6 text-gray-600 dark:text-gray-400">
-                        {faq.answer}
-                      </p>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
+                    <AnimatePresence initial={false}>
+                      {isOpen && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: "auto", opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{
+                            duration: 0.28,
+                            ease: [0.22, 1, 0.36, 1],
+                          }}
+                          className="overflow-hidden"
+                        >
+                          <p className="pb-6 pl-[44px] pr-12 text-sm leading-6 text-muted">
+                            {faq.answer}
+                          </p>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </li>
+                );
+              })}
+            </ul>
+          </Reveal>
         </div>
       </Container>
     </section>
