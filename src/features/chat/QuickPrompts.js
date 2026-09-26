@@ -41,17 +41,17 @@ export default function QuickPrompts({ onPromptSelect }) {
             key={item.title}
             type="button"
             onClick={() => onPromptSelect(item.prompt)}
-            className="group rounded-xl border border-gray-200 bg-white p-4 text-left transition hover:border-gray-300 hover:bg-gray-50"
+            className="group rounded-xl border border-gray-200 bg-white p-4 text-left transition hover:border-gray-300 hover:bg-gray-50 dark:border-gray-800 dark:bg-gray-900 dark:hover:border-gray-700 dark:hover:bg-gray-800"
           >
-            <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-lg bg-gray-100 text-gray-700">
+            <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-lg bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300">
               <Icon size={18} />
             </div>
 
-            <p className="text-sm font-semibold text-gray-950">
+            <p className="text-sm font-semibold text-gray-950 dark:text-white">
               {item.title}
             </p>
 
-            <p className="mt-1 text-sm leading-5 text-gray-500">
+            <p className="mt-1 text-sm leading-5 text-gray-500 dark:text-gray-400">
               {item.prompt}
             </p>
           </button>

@@ -1,5 +1,6 @@
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import Reveal from "@/components/common/Reveal";
 
 import HeroSection from "@/features/landing/HeroSection";
 import ProductPreview from "@/features/landing/ProductPreview";
@@ -17,15 +18,41 @@ export default function HomePage() {
       <Navbar />
 
       <main>
-        <HeroSection />
-        <ProductPreview />
-        <FeaturesSection />
-        <ModelsSection />
-        <ExtensionSection />
-        <WhyChooseSection />
-        <PricingSection />
-        <FaqSection />
-        <CtaSection />
+        <Reveal>
+          <HeroSection />
+        </Reveal>
+
+        <Reveal>
+          <ProductPreview />
+        </Reveal>
+
+        <Reveal>
+          <FeaturesSection />
+        </Reveal>
+
+        <Reveal>
+          <ModelsSection />
+        </Reveal>
+
+        <Reveal>
+          <ExtensionSection />
+        </Reveal>
+
+        <Reveal>
+          <WhyChooseSection />
+        </Reveal>
+
+        <Reveal>
+          <PricingSection />
+        </Reveal>
+
+        <Reveal>
+          <FaqSection />
+        </Reveal>
+
+        <Reveal>
+          <CtaSection />
+        </Reveal>
       </main>
 
       <Footer />

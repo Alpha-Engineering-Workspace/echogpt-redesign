@@ -12,7 +12,7 @@ export default function Logo() {
         <Sparkles size={18} />
       </div>
 
-      <span className="text-xl font-bold tracking-tight">
+      <span className="text-xl font-bold tracking-tight text-gray-950 dark:text-white">
         EchoGPT
       </span>
     </Link>

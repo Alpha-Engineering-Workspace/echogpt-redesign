@@ -20,8 +20,7 @@ export default function ModelSelector({
         onChange={(event) =>
           onModelChange(event.target.value)
         }
-        className="appearance-none rounded-lg border border-gray-200 bg-white py-2 pl-3 pr-9 text-sm font-medium text-gray-700 outline-none transition hover:border-gray-300 focus:border-gray-400"
-        aria-label="Select AI model"
+className="appearance-none rounded-lg border border-gray-200 bg-white py-2 pl-3 pr-9 text-sm font-medium text-gray-700 outline-none transition hover:border-gray-300 focus:border-gray-400 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200 dark:hover:border-gray-600 dark:focus:border-gray-500"        aria-label="Select AI model"
       >
         {models.map((model) => (
           <option key={model} value={model}>

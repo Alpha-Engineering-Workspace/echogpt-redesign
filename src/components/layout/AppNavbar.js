@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
+import ThemeToggle from "@/components/common/ThemeToggle";
 
 import Logo from "@/components/common/Logo";
 
@@ -17,7 +18,7 @@ export default function AppNavbar() {
   const router = useRouter();
 
   return (
-    <header className="border-b border-gray-200 bg-white">
+    <header className="border-b border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-950">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
         <div className="flex items-center gap-4">
           <button
@@ -44,8 +45,8 @@ export default function AppNavbar() {
                 href={link.href}
                 className={`rounded-lg px-3 py-2 text-sm font-medium transition ${
                   isActive
-                    ? "bg-gray-100 text-gray-950"
-                    : "text-gray-500 hover:bg-gray-50 hover:text-gray-950"
+                    ? "bg-gray-100 text-gray-950 dark:bg-gray-800 dark:text-white"
+                    : "text-gray-500 hover:bg-gray-50 hover:text-gray-950 dark:text-gray-400 dark:hover:bg-gray-900 dark:hover:text-white"
                 }`}
               >
                 {link.label}
@@ -53,6 +54,7 @@ export default function AppNavbar() {
             );
           })}
         </nav>
+        <ThemeToggle />
       </div>
     </header>
   );

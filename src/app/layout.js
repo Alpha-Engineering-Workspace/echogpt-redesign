@@ -1,5 +1,7 @@
 import "./globals.css";
 import AuthProvider from "@/components/providers/AuthProvider";
+import ThemeProvider from "@/components/providers/ThemeProvider";
+
 
 export const metadata = {
   title: {
@@ -12,9 +14,16 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <body>
-        <AuthProvider>{children}</AuthProvider>
+    <html
+      lang="en"
+      suppressHydrationWarning
+    >
+      <body suppressHydrationWarning>
+        <ThemeProvider>
+          <AuthProvider>
+            {children}
+          </AuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

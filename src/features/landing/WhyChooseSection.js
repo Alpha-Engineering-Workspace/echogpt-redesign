@@ -11,20 +11,17 @@ const reasons = [
   {
     icon: LayoutDashboard,
     title: "Everything in one place",
-    description:
-      "Stop jumping between different AI websites and tools.",
+    description: "Stop jumping between different AI websites and tools.",
   },
   {
     icon: Clock3,
     title: "Save more time",
-    description:
-      "Quick actions and browser tools help reduce repetitive work.",
+    description: "Quick actions and browser tools help reduce repetitive work.",
   },
   {
     icon: MousePointerClick,
     title: "Simple to use",
-    description:
-      "A clean interface keeps powerful AI tools easy to access.",
+    description: "A clean interface keeps powerful AI tools easy to access.",
   },
   {
     icon: Workflow,
@@ -36,20 +33,20 @@ const reasons = [
 
 export default function WhyChooseSection() {
   return (
-    <section className="py-20 sm:py-24">
+    <section className="bg-white py-20 transition-colors dark:bg-gray-950 sm:py-24">
       <Container>
         <div className="mx-auto max-w-2xl text-center">
-          <p className="text-sm font-semibold text-[#6857f5]">
+          <p className="text-sm font-semibold text-[#6857f5] dark:text-violet-400">
             WHY ECHOGPT
           </p>
 
-          <h2 className="mt-3 text-3xl font-bold tracking-tight text-gray-950 sm:text-4xl">
+          <h2 className="mt-3 text-3xl font-bold tracking-tight text-gray-950 dark:text-white sm:text-4xl">
             AI should simplify your work
           </h2>
 
-          <p className="mt-4 leading-7 text-gray-600">
-            EchoGPT focuses on making everyday AI tools more
-            accessible, organized, and productive.
+          <p className="mt-4 leading-7 text-gray-600 dark:text-gray-400">
+            EchoGPT focuses on making everyday AI tools more accessible,
+            organized, and productive.
           </p>
         </div>
 
@@ -58,19 +55,16 @@ export default function WhyChooseSection() {
             const Icon = reason.icon;
 
             return (
-              <div
-                key={reason.title}
-                className="text-center"
-              >
-                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-violet-100 text-[#6857f5]">
+              <div key={reason.title} className="text-center">
+                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-violet-100 text-[#6857f5] dark:bg-violet-500/15 dark:text-violet-300">
                   <Icon size={22} />
                 </div>
 
-                <h3 className="mt-5 font-semibold text-gray-950">
+                <h3 className="mt-5 font-semibold text-gray-950 dark:text-white">
                   {reason.title}
                 </h3>
 
-                <p className="mt-2 text-sm leading-6 text-gray-600">
+                <p className="mt-2 text-sm leading-6 text-gray-600 dark:text-gray-400">
                   {reason.description}
                 </p>
               </div>
