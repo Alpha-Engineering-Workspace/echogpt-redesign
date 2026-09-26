@@ -1,4 +1,5 @@
-## Live Site: echogpt-redesign.up.railway.app
+## Live Site: ([https://echogpt-redesign.up.railway.app](https://echogpt-redesign.up.railway.app/)/)
+
 ## Getting Started
 
 First, run the development server:
