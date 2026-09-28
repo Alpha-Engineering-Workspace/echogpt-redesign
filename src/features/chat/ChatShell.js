@@ -106,7 +106,9 @@ export default function ChatShell({ children }) {
 
       {/* Desktop sidebar — collapses to 0 width when collapsed */}
       <div className={`hidden md:block transition-[width] duration-200 ${sidebarWidthClass}`}>
-        {!collapsed && <ChatSidebar />}
+        {!collapsed && (
+          <ChatSidebar onOpenPalette={() => setPaletteOpen(true)} />
+        )}
       </div>
 
       {/* Sidebar handle — visible on desktop in both states.
@@ -162,7 +164,10 @@ export default function ChatShell({ children }) {
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <ChatSidebar onNavigate={handleCloseSidebar} />
+        <ChatSidebar
+          onNavigate={handleCloseSidebar}
+          onOpenPalette={() => setPaletteOpen(true)}
+        />
       </div>
 
       <main className="relative min-w-0 flex-1 overflow-hidden bg-bg">

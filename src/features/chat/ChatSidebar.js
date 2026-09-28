@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { signOut, useSession } from "next-auth/react";
 import { AnimatePresence } from "framer-motion";
-import { Command, Plus, Settings, User, X } from "lucide-react";
+import { LogOut, Plus, Settings, User, X } from "lucide-react";
 
 import Logo from "@/components/common/Logo";
 import ChatSearch from "@/features/chat/ChatSearch";
@@ -13,13 +13,15 @@ import PinnedChats from "@/features/chat/PinnedChats";
 import PromptLibraryButton from "@/components/layout/PromptLibraryButton";
 import useLocalStorage from "@/hooks/useLocalStorage";
 
-export default function ChatSidebar({ onNavigate }) {
+export default function ChatSidebar({ onNavigate, onOpenPalette }) {
   const pathname = usePathname();
   const router = useRouter();
+  const { data: session } = useSession();
 
   const [chats, setChats] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isCreating, setIsCreating] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [pinnedIds, setPinnedIds] = useLocalStorage("pinnedChats", []);
 
   useEffect(() => {
@@ -123,6 +125,19 @@ export default function ChatSidebar({ onNavigate }) {
       router.refresh();
     } catch (error) {
       console.error("Failed to delete chat:", error);
+    }
+  }
+
+  async function handleLogout() {
+    if (isLoggingOut) return;
+    setIsLoggingOut(true);
+    onNavigate?.();
+    try {
+      await signOut({ callbackUrl: "/" });
+    } catch (err) {
+      console.error("Logout failed:", err);
+      setIsLoggingOut(false);
+      router.refresh();
     }
   }
 
@@ -237,40 +252,94 @@ export default function ChatSidebar({ onNavigate }) {
         )}
       </div>
 
-      {/* Bottom: nav + status */}
+      {/* Bottom: nav + status + logout */}
       <div className="shrink-0 border-t border-border p-2">
         <div className="space-y-0.5">
           <PromptLibraryButton onNavigate={onNavigate} />
-          <Link
+          <SidebarNavItem
+            onClick={onNavigate}
             href="/settings"
+            icon={<Settings size={13} className="text-muted-foreground" />}
+            label="Settings"
+          />
+          <SidebarNavItem
             onClick={onNavigate}
-            className="flex items-center gap-2.5 rounded-md px-2.5 py-1.5 text-xs text-muted transition hover:bg-surface-hover hover:text-fg"
-          >
-            <Settings size={13} className="text-muted-foreground" />
-            Settings
-          </Link>
-          <Link
             href="/profile"
-            onClick={onNavigate}
-            className="flex items-center gap-2.5 rounded-md px-2.5 py-1.5 text-xs text-muted transition hover:bg-surface-hover hover:text-fg"
-          >
-            <User size={13} className="text-muted-foreground" />
-            Profile
-          </Link>
+            icon={<User size={13} className="text-muted-foreground" />}
+            label="Profile"
+          />
+          {session?.user && (
+            <SidebarNavItem
+              onClick={handleLogout}
+              disabled={isLoggingOut}
+              icon={<LogOut size={13} className="text-muted-foreground" />}
+              label={isLoggingOut ? "Signing out..." : "Log out"}
+              danger
+            />
+          )}
         </div>
 
-        {/* Status footer */}
-        <div className="mt-2 flex items-center gap-2 rounded-md border border-border bg-bg px-2.5 py-1.5 text-[10.5px] text-muted">
+        {/* Status footer with prominent shortcut chip */}
+        <div className="mt-2 flex items-center gap-2 rounded-md border border-border bg-bg px-2 py-1.5 text-[10.5px] text-muted">
           <span className="relative inline-flex h-1.5 w-1.5">
             <span className="absolute inset-0 rounded-full bg-success animate-pulse-dot" />
           </span>
           <span className="font-medium text-fg">All synced</span>
-          <span className="ml-auto text-[10px] text-muted-foreground">
-            <Command size={9} className="inline-block align-middle" />
-            +K
-          </span>
+
+          {/* ⌘K chip — clickable highlight for the command palette */}
+          <button
+            type="button"
+            onClick={() => onOpenPalette?.()}
+            aria-label="Open command palette"
+            title="Open command palette (⌘K)"
+            className="ml-auto inline-flex items-center gap-0.5 rounded-sm border border-border bg-surface px-1 py-px font-mono text-[10px] font-semibold text-fg/80 transition hover:border-accent hover:bg-accent-soft-strong hover:text-accent"
+          >
+            <span className="text-[10px] leading-none">⌘</span>
+            <span className="text-[10px] leading-none">K</span>
+          </button>
         </div>
       </div>
     </aside>
+  );
+}
+
+/**
+ * SidebarNavItem — uniform bottom-nav item used for Prompt Library, Settings,
+ * Profile, and Logout. Rendered as a <button> for every variant (the href
+ * variants call router.push). This keeps the DOM identical across all 4
+ * items so their font size, padding, gap, and icon alignment match exactly.
+ *
+ *  - icon: lucide <Icon /> element
+ *  - label: visible text
+ *  - href (optional): if provided, click navigates via router.push and
+ *    triggers onClick (used to close the mobile drawer).
+ *  - onClick (optional): if no href, this is the action handler (logout).
+ *  - danger: swaps hover to danger red.
+ *  - disabled: greys out the button.
+ */
+function SidebarNavItem({ icon, label, href, onClick, danger = false, disabled = false }) {
+  const router = useRouter();
+
+  function handleClick(event) {
+    onClick?.();
+    if (href) router.push(href);
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={handleClick}
+      disabled={disabled}
+      className={`flex w-full items-center gap-2.5 rounded-md px-2.5 py-1.5 text-xs text-muted transition disabled:cursor-not-allowed disabled:opacity-60 ${
+        danger
+          ? "hover:bg-danger/10 hover:text-danger"
+          : "hover:bg-surface-hover hover:text-fg"
+      }`}
+    >
+      <span className="flex h-3.5 w-3.5 shrink-0 items-center justify-center [&_svg]:block">
+        {icon}
+      </span>
+      <span className="leading-none">{label}</span>
+    </button>
   );
 }

@@ -32,8 +32,10 @@ export default function PromptLibraryButton({ onNavigate }) {
         }}
         className="flex w-full items-center gap-2.5 rounded-md px-2.5 py-1.5 text-xs text-muted transition hover:bg-surface-hover hover:text-fg"
       >
-        <Library size={13} className="text-muted-foreground" />
-        Prompt Library
+        <span className="flex h-3.5 w-3.5 shrink-0 items-center justify-center [&_svg]:block">
+          <Library size={13} className="text-muted-foreground" />
+        </span>
+        <span className="leading-none">Prompt Library</span>
       </button>
 
       <PromptLibrary open={open} onClose={() => setOpen(false)} />

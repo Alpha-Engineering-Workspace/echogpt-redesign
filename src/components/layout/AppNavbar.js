@@ -71,9 +71,7 @@ export default function AppNavbar() {
             <ArrowLeft size={15} />
           </button>
 
-          <Link href="/chat" className="flex items-center">
-            <Logo size="sm" />
-          </Link>
+          <Logo href="/chat" size="sm" showText={false} />
         </div>
 
         {/* Right cluster — desktop nav + theme toggle + mobile menu button */}

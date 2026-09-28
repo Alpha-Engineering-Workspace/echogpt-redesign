@@ -1,13 +1,25 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Calendar, Mail, MessageSquare, Sparkles, User } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { signOut } from "next-auth/react";
+import {
+  Calendar,
+  Loader2,
+  LogOut,
+  Mail,
+  MessageSquare,
+  Sparkles,
+  User,
+} from "lucide-react";
 
 export default function ProfileContent({ user }) {
+  const router = useRouter();
   const [stats, setStats] = useState({
     chatCount: 0,
     messageCount: 0,
   });
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   useEffect(() => {
     async function loadStats() {
@@ -35,6 +47,18 @@ export default function ProfileContent({ user }) {
 
     loadStats();
   }, []);
+
+  async function handleLogout() {
+    if (isLoggingOut) return;
+    setIsLoggingOut(true);
+    try {
+      await signOut({ callbackUrl: "/" });
+    } catch (err) {
+      console.error("Logout failed:", err);
+      setIsLoggingOut(false);
+      router.refresh();
+    }
+  }
 
   const initial = user.name?.charAt(0)?.toUpperCase() || "U";
   const joinedDate = new Date().toLocaleDateString(undefined, {
@@ -103,6 +127,33 @@ export default function ProfileContent({ user }) {
         >
           Open settings
         </a>
+      </section>
+
+      {/* Session */}
+      <section className="rounded-md border border-border bg-surface-elevated p-5">
+        <h3 className="text-sm font-semibold text-fg">Session</h3>
+        <p className="mt-1 text-xs text-muted">
+          Sign out of this device. You'll need to log in again to access your
+          conversations.
+        </p>
+        <button
+          type="button"
+          onClick={handleLogout}
+          disabled={isLoggingOut}
+          className="mt-3 inline-flex h-8 items-center gap-1.5 rounded-md border border-danger/30 bg-danger/10 px-3 text-xs font-medium text-danger transition hover:bg-danger/15 disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          {isLoggingOut ? (
+            <>
+              <Loader2 size={12} className="animate-spin" />
+              Signing out...
+            </>
+          ) : (
+            <>
+              <LogOut size={12} strokeWidth={2.25} />
+              Log out
+            </>
+          )}
+        </button>
       </section>
     </div>
   );

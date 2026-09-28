@@ -140,11 +140,11 @@ export default function LoginPage() {
             </div>
 
             {/* Model strip */}
-            <div className="flex items-center gap-2 border-t border-border bg-surface px-3 py-2.5">
+            <div className="flex flex-wrap items-center gap-x-2 gap-y-1.5 border-t border-border bg-surface px-3 py-2.5">
               <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
                 Models
               </span>
-              <div className="flex flex-1 items-center gap-1.5 overflow-hidden">
+              <div className="flex flex-wrap items-center gap-1.5">
                 {models.map((m) => (
                   <span
                     key={m.name}
