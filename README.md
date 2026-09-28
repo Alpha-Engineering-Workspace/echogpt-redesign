@@ -303,27 +303,70 @@ Live URL: https://echogpt-redesign.up.railway.app
 
 ## Screenshots
 
-Drop images into `public/c/` using the names below. They are referenced as `/screenshots/<name>` so they ship with the app.
+All screenshots live in `public/screenshots/` and are served from `/screenshots/<name>` so they ship with the app. Below is each one embedded inline.
 
-| Screenshot | File | Page it represents |
-|---|---|---|
-| Landing hero | `public/screenshots/landing-hero.png` | `/` |
-| Landing features | `public/screenshots/landing-features.png` | `/` |
-| Landing bento / capability grid | `public/screenshots/landing-bento.png` | `/` |
-| Login | `public/screenshots/login.png` | `/login` |
-| Register | `public/screenshots/register.png` | `/register` |
-| Chat — empty state with sidebar | `public/screenshots/chat-empty.png` | `/chat` |
-| Chat — active conversation | `public/screenshots/chat-conversation.png` | `/chat/:id` |
-| Chat — command palette (`Cmd+K`) | `public/screenshots/chat-command-palette.png` | modal |
-| Chat — prompt library | `public/screenshots/chat-prompt-library.png` | modal |
-| Extension concept | `public/screenshots/extension.png` | `/extension` |
-| Mobile — chat | `public/screenshots/mobile-chat.png` | `/` (mobile) |
-| Mobile — sidebar drawer | `public/screenshots/mobile-sidebar.png` | `/chat` (mobile) |
+### Landing page
 
-Each `*.png` should be ≤ 250 KB for fast page loads. Image dimensions between 1280–1920px wide are recommended for desktop captures; portrait shots at 414×896 for mobile. To add a screenshot to this README, drop the image into the path above and link it like:
+**Hero**
+
+<img src="public/screenshots/landing-hero.png" alt="Landing hero" width="100%" />
+
+**Features**
+
+<img src="public/screenshots/landing-features.png" alt="Landing features" width="100%" />
+
+**Bento / capability grid**
+
+<img src="public/screenshots/landing-bento.png" alt="Landing bento" width="100%" />
+
+### Authentication
+
+**Login**
+
+<img src="public/screenshots/login.png" alt="Login" width="100%" />
+
+**Register**
+
+<img src="public/screenshots/register.png" alt="Register" width="100%" />
+
+### Chat workspace
+
+**Empty state with sidebar**
+
+<img src="public/screenshots/chat-empty.png" alt="Chat empty state" width="100%" />
+
+**Active conversation**
+
+<img src="public/screenshots/chat-conversation.png" alt="Chat conversation" width="100%" />
+
+**Command Palette (Cmd+K)**
+
+<img src="public/screenshots/chat-command-palette.png" alt="Command palette" width="100%" />
+
+**Prompt Library**
+
+<img src="public/screenshots/chat-prompt-library.png" alt="Prompt library" width="100%" />
+
+### Extension concept
+
+<img src="public/screenshots/extension.png" alt="Extension concept page" width="100%" />
+
+### Mobile
+
+**Chat (mobile)**
+
+<img src="public/screenshots/mobile-chat.png" alt="Mobile chat" width="320" />
+
+**Sidebar drawer (mobile)**
+
+<img src="public/screenshots/mobile-sidebar.png" alt="Mobile sidebar drawer" width="320" />
+
+### Adding new screenshots
+
+Each `*.png` should be ≤ 250 KB for fast page loads. Image dimensions between 1280–1920px wide are recommended for desktop captures; portrait shots at 414×896 for mobile. To add a screenshot to this README, drop the image into `public/screenshots/<name>.png` and embed it like:
 
 ```markdown
-![Landing hero](public/screenshots/landing-hero.png)
+<img src="public/screenshots/your-shot.png" alt="Your shot" width="100%" />
 ```
 
 ---
