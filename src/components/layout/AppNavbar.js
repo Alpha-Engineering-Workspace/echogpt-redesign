@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ChevronRight, Menu, X } from "lucide-react";
 import ThemeToggle from "@/components/common/ThemeToggle";
 import Logo from "@/components/common/Logo";
 
@@ -17,6 +17,7 @@ export default function AppNavbar() {
   const pathname = usePathname();
   const router = useRouter();
   const [scrolled, setScrolled] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
     function handleScroll() {
@@ -27,6 +28,31 @@ export default function AppNavbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Close the mobile menu when the route changes
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [pathname]);
+
+  // Lock body scroll when the mobile menu is open
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isMenuOpen]);
+
+  function handleCloseMenu() {
+    setIsMenuOpen(false);
+  }
+
+  function isActiveLink(href) {
+    return pathname === href || pathname.startsWith(href + "/");
+  }
+
   return (
     <header className="sticky top-3 z-40 px-3 sm:px-4">
       <div
@@ -34,7 +60,8 @@ export default function AppNavbar() {
           scrolled ? "border-[var(--border-strong)]" : ""
         }`}
       >
-        <div className="flex items-center gap-3">
+        {/* Left cluster — always visible: back + logo */}
+        <div className="flex items-center gap-2 sm:gap-3">
           <button
             type="button"
             onClick={() => router.back()}
@@ -44,31 +71,95 @@ export default function AppNavbar() {
             <ArrowLeft size={15} />
           </button>
 
-          <Logo size="sm" />
+          <Link href="/chat" className="flex items-center">
+            <Logo size="sm" />
+          </Link>
         </div>
 
-        <nav className="flex items-center gap-0.5">
+        {/* Right cluster — desktop nav + theme toggle + mobile menu button */}
+        <div className="flex items-center gap-1 sm:gap-2">
+          {/* Desktop nav links (hidden on mobile) */}
+          <nav className="hidden items-center sm:flex">
+            {links.map((link) => {
+              const isActive = isActiveLink(link.href);
+
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`rounded-md px-3 py-1.5 text-xs font-medium transition ${
+                    isActive
+                      ? "bg-surface-hover text-fg"
+                      : "text-muted hover:bg-surface-hover hover:text-fg"
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
+          </nav>
+
+          <ThemeToggle />
+
+          {/* Mobile hamburger — opens slide-down menu */}
+          <button
+            type="button"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            aria-label={
+              isMenuOpen ? "Close navigation menu" : "Open navigation menu"
+            }
+            aria-expanded={isMenuOpen}
+            className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-border bg-surface-elevated text-fg transition hover:bg-surface-hover sm:hidden"
+          >
+            {isMenuOpen ? <X size={15} /> : <Menu size={15} />}
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile slide-down menu panel */}
+      <div
+        className={`mx-auto mt-2 max-w-[1440px] overflow-hidden rounded-xl border border-border bg-surface-overlay shadow-pop transition-all duration-200 ease-out sm:hidden ${
+          isMenuOpen
+            ? "max-h-[400px] opacity-100"
+            : "pointer-events-none max-h-0 opacity-0"
+        }`}
+        aria-hidden={!isMenuOpen}
+      >
+        <nav className="flex flex-col p-2">
           {links.map((link) => {
-            const isActive =
-              pathname === link.href || pathname.startsWith(link.href + "/");
+            const isActive = isActiveLink(link.href);
 
             return (
               <Link
                 key={link.href}
                 href={link.href}
-                className={`rounded-md px-3 py-1.5 text-xs font-medium transition ${
+                onClick={handleCloseMenu}
+                className={`flex items-center justify-between rounded-md px-3 py-2.5 text-sm font-medium transition ${
                   isActive
-                    ? "bg-surface-hover text-fg"
+                    ? "bg-accent-soft-strong text-fg"
                     : "text-muted hover:bg-surface-hover hover:text-fg"
                 }`}
               >
-                {link.label}
+                <span>{link.label}</span>
+                <ChevronRight
+                  size={14}
+                  className={`transition ${
+                    isActive ? "text-accent" : "text-muted-foreground"
+                  }`}
+                />
               </Link>
             );
           })}
         </nav>
 
-        <ThemeToggle />
+        {/* Footer status row inside the mobile menu */}
+        <div className="flex items-center justify-between border-t border-border px-4 py-2.5 text-[11px] text-muted-foreground">
+          <span className="inline-flex items-center gap-1.5">
+            <span className="h-1.5 w-1.5 rounded-full bg-success animate-pulse-dot" />
+            All systems normal
+          </span>
+          <span className="font-mono">⌘K</span>
+        </div>
       </div>
     </header>
   );

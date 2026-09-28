@@ -9,25 +9,25 @@ import Reveal from "@/components/common/Reveal";
  */
 export default function ProductPreview() {
   return (
-    <section className="section-band border-y border-border py-20">
+    <section className="section-band border-y border-border py-12 sm:py-20">
       <Container size="wide">
         <Reveal variant="fade-up">
           <div className="overflow-hidden rounded-xl border border-border bg-bg shadow-pop">
             {/* Browser chrome */}
-            <div className="flex items-center gap-1.5 border-b border-border px-4 py-2.5">
+            <div className="flex items-center gap-1.5 border-b border-border px-3 py-2.5 sm:px-4">
               <span className="h-2 w-2 rounded-full bg-border" />
               <span className="h-2 w-2 rounded-full bg-border" />
               <span className="h-2 w-2 rounded-full bg-border" />
-              <div className="ml-3 flex-1 rounded-sm border border-border bg-surface px-3 py-1.5 text-center text-[11px] text-muted">
+              <div className="ml-2 flex-1 truncate rounded-sm border border-border bg-surface px-2.5 py-1 text-center text-[10px] text-muted sm:ml-3 sm:px-3 sm:py-1.5 sm:text-[11px]">
                 echogpt.live/chat
               </div>
-              <div className="ml-3 hidden items-center gap-1.5 rounded-sm border border-border bg-surface px-2.5 py-1 text-[10px] text-muted sm:flex">
+              <div className="ml-2 hidden items-center gap-1.5 rounded-sm border border-border bg-surface px-2.5 py-1 text-[10px] text-muted sm:ml-3 sm:flex">
                 <span className="h-1.5 w-1.5 rounded-full bg-success animate-pulse-dot" />
                 live
               </div>
             </div>
 
-            <div className="grid h-[480px] grid-cols-1 lg:h-[560px] lg:grid-cols-[220px_minmax(0,1fr)]">
+<div className="grid min-h-[420px] grid-cols-1 lg:min-h-[560px] lg:grid-cols-[220px_minmax(0,1fr)]">
               {/* Sidebar */}
               <aside className="hidden border-r border-border bg-surface p-3 lg:flex lg:flex-col">
                 {/* New Chat CTA */}
@@ -208,7 +208,7 @@ export default function ProductPreview() {
               {/* Main column */}
               <div className="flex flex-1 flex-col">
                 {/* Header */}
-                <div className="flex h-12 items-center justify-between border-b border-border px-4 sm:px-6">
+                <div className="flex h-12 items-center justify-between border-b border-border px-3 sm:px-6">
                   <div>
                     <p className="text-sm font-semibold text-fg">
                       New conversation
@@ -225,19 +225,20 @@ export default function ProductPreview() {
                 </div>
 
                 {/* Empty state */}
-                <div className="flex flex-1 items-center justify-center p-6">
+                <div className="flex flex-1 items-center justify-center p-4 sm:p-6">
                   <div className="w-full max-w-xl text-center">
-                    <div className="mx-auto inline-flex h-12 w-12 items-center justify-center rounded-lg bg-accent-soft-strong text-accent">
-                      <Bot size={20} />
+                    <div className="mx-auto inline-flex h-10 w-10 items-center justify-center rounded-lg bg-accent-soft-strong text-accent sm:h-12 sm:w-12">
+                      <Bot size={18} className="sm:hidden" />
+                      <Bot size={20} className="hidden sm:block" />
                     </div>
-                    <h3 className="mt-5 text-2xl font-semibold tracking-tight text-fg">
+                    <h3 className="mt-4 text-lg font-semibold tracking-tight text-fg sm:mt-5 sm:text-2xl">
                       How can I help you today?
                     </h3>
-                    <p className="mt-1.5 text-sm text-muted">
+                    <p className="mt-1 text-xs text-muted sm:mt-1.5 sm:text-sm">
                       Choose a suggestion or ask your own question.
                     </p>
 
-                    <div className="mt-6 grid gap-2 sm:grid-cols-2">
+                    <div className="mt-4 grid gap-1.5 sm:mt-6 sm:grid-cols-2 sm:gap-2">
                       {[
                         ["Explain something", "Break down a difficult topic."],
                         ["Write better", "Improve or rewrite your content."],
@@ -246,12 +247,12 @@ export default function ProductPreview() {
                       ].map(([title, sub]) => (
                         <button
                           key={title}
-                          className="rounded-md border border-border bg-surface-elevated p-3 text-left transition hover:border-border-strong hover:bg-surface-hover"
+                          className="rounded-md border border-border bg-surface-elevated p-2.5 text-left transition hover:border-border-strong hover:bg-surface-hover sm:p-3"
                         >
-                          <strong className="block text-sm font-semibold text-fg">
+                          <strong className="block text-xs font-semibold text-fg sm:text-sm">
                             {title}
                           </strong>
-                          <span className="mt-0.5 block text-xs text-muted">
+                          <span className="mt-0.5 block text-[10.5px] text-muted sm:text-xs">
                             {sub}
                           </span>
                         </button>
@@ -261,18 +262,19 @@ export default function ProductPreview() {
                 </div>
 
                 {/* Composer */}
-                <div className="p-4 sm:p-5">
-                  <div className="mx-auto flex max-w-3xl items-center gap-2 rounded-md border border-border bg-surface-elevated p-2 shadow-1 focus-within:border-accent">
+                <div className="p-3 sm:p-5">
+                  <div className="mx-auto flex max-w-3xl items-center gap-2 rounded-md border border-border bg-surface-elevated p-1.5 shadow-1 focus-within:border-accent sm:p-2">
                     <input
                       type="text"
                       placeholder="Ask EchoGPT anything..."
-                      className="min-w-0 flex-1 bg-transparent px-2 text-sm text-fg outline-none placeholder:text-muted-foreground"
+                      className="min-w-0 flex-1 bg-transparent px-2 text-xs text-fg outline-none placeholder:text-muted-foreground sm:text-sm"
                     />
                     <button
-                      className="inline-flex h-8 w-8 items-center justify-center rounded-sm bg-[var(--primary)] text-white transition hover:bg-[var(--primary-hover)]"
+                      className="inline-flex h-7 w-7 items-center justify-center rounded-sm bg-[var(--primary)] text-white transition hover:bg-[var(--primary-hover)] sm:h-8 sm:w-8"
                       aria-label="Send message"
                     >
-                      <Send size={13} />
+                      <Send size={11} className="sm:hidden" />
+                      <Send size={13} className="hidden sm:block" />
                     </button>
                   </div>
                 </div>
