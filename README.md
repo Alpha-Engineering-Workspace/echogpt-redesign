@@ -361,13 +361,6 @@ All screenshots live in `public/screenshots/` and are served from `/screenshots/
 
 <img src="public/screenshots/mobile-sidebar.png" alt="Mobile sidebar drawer" width="320" />
 
-### Adding new screenshots
-
-Each `*.png` should be ≤ 250 KB for fast page loads. Image dimensions between 1280–1920px wide are recommended for desktop captures; portrait shots at 414×896 for mobile. To add a screenshot to this README, drop the image into `public/screenshots/<name>.png` and embed it like:
-
-```markdown
-<img src="public/screenshots/your-shot.png" alt="Your shot" width="100%" />
-```
 
 ---
 
