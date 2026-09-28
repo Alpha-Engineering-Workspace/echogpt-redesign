@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#7c6cf5"/>
+      <stop offset="1" stop-color="#a78bfa"/>
+    </linearGradient>
+  </defs>
+  <!-- Rounded square background, matching Logo.js wrapper -->
+  <rect x="0" y="0" width="32" height="32" rx="7" fill="url(#bg)"/>
+  <!-- Subtle inner highlight for depth -->
+  <rect x="0" y="0" width="32" height="14" rx="7" fill="url(#hl)" opacity="0.18"/>
+  <defs>
+    <linearGradient id="hl" x1="0" y1="0" x2="0" y2="14" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <!-- Sparkles icon, centered (mirrors lucide Sparkles) -->
+  <g stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <!-- big sparkle: top-right -->
+    <path d="M19 4 L20.5 8 L24.5 9.5 L20.5 11 L19 15 L17.5 11 L13.5 9.5 L17.5 8 Z" fill="#ffffff" stroke="none"/>
+    <!-- small sparkle: bottom-left -->
+    <path d="M11 18 L11.7 20 L13.7 20.7 L11.7 21.4 L11 23.4 L10.3 21.4 L8.3 20.7 L10.3 20 Z" fill="#ffffff" stroke="none" opacity="0.85"/>
+    <!-- tiny dot accent -->
+    <circle cx="23" cy="22" r="0.9" fill="#ffffff" opacity="0.9"/>
+  </g>
+</svg>

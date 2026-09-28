@@ -409,6 +409,17 @@ export default function ChatWorkspace({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messages, title]);
 
+  // ─── Listen for prompt-library inserts ─────────────────────────────────
+  useEffect(() => {
+    function onInsertPrompt(event) {
+      const text = event.detail;
+      if (typeof text !== "string" || !text.trim()) return;
+      setMessage(text);
+    }
+    window.addEventListener("echogpt:insert-prompt", onInsertPrompt);
+    return () => window.removeEventListener("echogpt:insert-prompt", onInsertPrompt);
+  }, []);
+
   return (
     <div className="flex h-full flex-col">
       <ChatHeader

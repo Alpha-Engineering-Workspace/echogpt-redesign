@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useTheme } from "next-themes";
-import { Loader2 } from "lucide-react";
+import { Loader2, Monitor, Moon, Sun } from "lucide-react";
 
 export default function SettingsForm() {
   const { data: session, update } = useSession();
@@ -116,22 +116,42 @@ export default function SettingsForm() {
         description="Customize how EchoGPT looks and feels."
       >
         <div>
-          <label
-            htmlFor="theme"
-            className="mb-1.5 block text-xs font-medium text-fg"
-          >
+          <span className="mb-1.5 block text-xs font-medium text-fg">
             Theme preference
-          </label>
-          <select
-            id="theme"
-            value={theme || "system"}
-            onChange={(e) => setTheme(e.target.value)}
-            className="w-full rounded-md border border-border bg-bg px-3 py-2.5 text-sm text-fg outline-none transition focus:border-accent"
+          </span>
+          <div
+            role="radiogroup"
+            aria-label="Theme preference"
+            className="inline-flex w-full overflow-hidden rounded-md border border-border bg-bg p-0.5 sm:w-auto"
           >
-            <option value="system">System</option>
-            <option value="light">Light</option>
-            <option value="dark">Dark</option>
-          </select>
+            {[
+              { value: "light", label: "Light", Icon: Sun },
+              { value: "dark", label: "Dark", Icon: Moon },
+              { value: "system", label: "System", Icon: Monitor },
+            ].map(({ value, label, Icon }, i, arr) => {
+              const isActive = (theme || "system") === value;
+              return (
+                <button
+                  key={value}
+                  type="button"
+                  role="radio"
+                  aria-checked={isActive}
+                  onClick={() => setTheme(value)}
+                  className={`inline-flex flex-1 items-center justify-center gap-1.5 rounded-xs px-3 py-1.5 text-xs font-medium transition sm:flex-initial ${
+                    isActive
+                      ? "bg-[var(--primary)] text-white shadow-[0_1px_0_rgba(255,255,255,0.18)_inset,0_4px_14px_-4px_rgba(124,108,245,0.45)]"
+                      : "text-muted hover:bg-surface-hover hover:text-fg"
+                  } ${i > 0 ? "sm:ml-0.5" : ""}`}
+                >
+                  <Icon size={12} strokeWidth={2.25} />
+                  {label}
+                </button>
+              );
+            })}
+          </div>
+          <p className="mt-2 text-[10px] text-muted-foreground">
+            Cycles: Light → Dark → System. Persisted across sessions.
+          </p>
         </div>
 
         <SettingToggle

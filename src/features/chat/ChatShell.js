@@ -1,42 +1,96 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Menu, X } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { ChevronLeft, ChevronRight, Menu, X } from "lucide-react";
 
 import ChatSidebar from "@/features/chat/ChatSidebar";
 import CommandPalette from "@/components/common/CommandPalette";
+import useLocalStorage from "@/hooks/useLocalStorage";
+import useKeyboardShortcut from "@/hooks/useKeyboardShortcut";
+
+function isTypingInForm() {
+  if (typeof document === "undefined") return false;
+  const el = document.activeElement;
+  if (!el) return false;
+  const tag = el.tagName;
+  if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return true;
+  if (el.isContentEditable) return true;
+  // Skip if the focused element is inside our modal/dialog
+  return Boolean(el.closest("[role='dialog']"));
+}
 
 export default function ChatShell({ children }) {
+  const router = useRouter();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [paletteOpen, setPaletteOpen] = useState(false);
+  const [collapsed, setCollapsed] = useLocalStorage("sidebarCollapsed", false);
 
   function handleCloseSidebar() {
     setIsSidebarOpen(false);
   }
 
-  // Keyboard shortcuts
+  function toggleSidebar() {
+    if (window.matchMedia("(min-width: 768px)").matches) {
+      setCollapsed((c) => !c);
+    } else {
+      setIsSidebarOpen((v) => !v);
+    }
+  }
+
+  // ── Keyboard: ⌘K / Ctrl+K — toggle command palette ───────────────────
+  useKeyboardShortcut("mod", "k", () => setPaletteOpen((prev) => !prev));
+
+  // ── Keyboard: ⌘B / Ctrl+B — toggle desktop sidebar collapse ──────────
+  useKeyboardShortcut("mod", "b", () => {
+    if (window.matchMedia("(min-width: 768px)").matches) {
+      setCollapsed((c) => !c);
+    }
+  });
+
+  // ── Keyboard: ⌘⇧O / Ctrl+Shift+O — start a new chat ──────────────────
+  useKeyboardShortcut("mod", "o", async () => {
+    if (!window.matchMedia("(min-width: 768px)").matches) return;
+    try {
+      const response = await fetch("/api/chats", { method: "POST" });
+      const data = await response.json();
+      if (response.ok) {
+        router.push(`/chat/${data.chat.id}`);
+      }
+    } catch {
+      // ignore
+    }
+  }, { shift: true });
+
+  // ── Keyboard: `/` — focus the chat composer ──────────────────────────
+  useKeyboardShortcut(null, "/", () => {
+    if (isTypingInForm()) return;
+    const composer = document.querySelector("textarea[data-chat-input]");
+    if (composer) {
+      composer.focus();
+    }
+  }, { preventDefault: true });
+
+  // ── Keyboard: Escape — close palette or sidebar ──────────────────────
   useEffect(() => {
     function handleKeyDown(event) {
-      // ⌘K / Ctrl+K — open command palette
-      if (
-        (event.metaKey || event.ctrlKey) &&
-        event.key.toLowerCase() === "k"
-      ) {
-        event.preventDefault();
-        setPaletteOpen((prev) => !prev);
-        return;
-      }
-
-      // Escape — close palette or sidebar
-      if (event.key === "Escape") {
+      if (event.key !== "Escape") return;
+      if (paletteOpen) {
         setPaletteOpen(false);
+      }
+      if (isSidebarOpen) {
         setIsSidebarOpen(false);
       }
     }
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
+  }, [paletteOpen, isSidebarOpen]);
+
+  // Hide the sidebar entirely when collapsed on desktop
+  const sidebarWidthClass = collapsed
+    ? "md:w-0 md:overflow-hidden md:border-r-0"
+    : "md:w-72";
 
   return (
     <div className="relative flex h-screen overflow-hidden bg-bg">
@@ -50,17 +104,44 @@ export default function ChatShell({ children }) {
         aria-hidden="true"
       />
 
-      {/* Desktop sidebar */}
-      <div className="hidden md:block">
-        <ChatSidebar />
+      {/* Desktop sidebar — collapses to 0 width when collapsed */}
+      <div className={`hidden md:block transition-[width] duration-200 ${sidebarWidthClass}`}>
+        {!collapsed && <ChatSidebar />}
       </div>
 
-      {/* Mobile menu button */}
+      {/* Sidebar handle — visible on desktop in both states.
+          - Collapsed: shows "Chats →" on the left edge to expand.
+          - Expanded:  shows "← Hide" hugging the sidebar's right edge to collapse. */}
       <button
         type="button"
-        onClick={() => setIsSidebarOpen(true)}
-        aria-label="Open sidebar"
-        className="fixed left-3 top-3 z-40 inline-flex h-8 w-8 items-center justify-center rounded-md border border-border bg-surface-elevated text-fg shadow-1 transition hover:bg-surface-hover md:hidden"
+        onClick={toggleSidebar}
+        aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+        title={collapsed ? "Expand sidebar (⌘B)" : "Collapse sidebar (⌘B)"}
+        className={`group fixed top-1/2 z-30 hidden h-9 -translate-y-1/2 items-center gap-1 border border-border bg-surface-elevated text-muted shadow-1 transition hover:bg-surface-hover hover:text-fg md:flex ${
+          isSidebarOpen ? "hidden" : ""
+        } ${collapsed ? "left-0 rounded-r-md border-l-0 px-1.5" : "left-[288px] -ml-3 rounded-full"}`}
+      >
+        {collapsed ? (
+          <>
+            <ChevronRight size={11} strokeWidth={2.5} />
+            <span className="text-[10px] font-semibold uppercase tracking-wider">
+              Chats
+            </span>
+          </>
+        ) : (
+          <ChevronLeft size={11} strokeWidth={2.5} />
+        )}
+      </button>
+
+      {/* Mobile menu button (lives above the AppNavbar hamburger) */}
+      <button
+        type="button"
+        onClick={toggleSidebar}
+        aria-label={isSidebarOpen ? "Close sidebar" : "Open sidebar"}
+        title="Open sidebar"
+        className={`fixed left-3 top-3 z-50 inline-flex h-8 w-8 items-center justify-center rounded-md border border-border bg-surface-elevated text-fg shadow-1 transition hover:bg-surface-hover md:hidden ${
+          isSidebarOpen ? "hidden" : ""
+        }`}
       >
         <Menu size={16} />
       </button>

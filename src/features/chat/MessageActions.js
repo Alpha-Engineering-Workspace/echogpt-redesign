@@ -4,6 +4,17 @@ import { useState } from "react";
 import { Check, Copy, Pencil, RefreshCw, ThumbsDown, ThumbsUp } from "lucide-react";
 import { toast } from "sonner";
 
+import Tooltip from "@/components/common/Tooltip";
+
+/**
+ * MessageActions — toolbar shown under each message bubble.
+ *
+ * Assistant: Copy, Helpful (like), Not helpful (dislike), Regenerate.
+ * User:      Copy, Edit.
+ *
+ * Reactions are mutually exclusive: clicking one replaces the other.
+ * The parent owns the reaction state and passes the current value.
+ */
 export default function MessageActions({
   message,
   isUser,
@@ -30,61 +41,74 @@ export default function MessageActions({
 
   return (
     <div className="inline-flex items-center gap-0.5 rounded-lg border border-border bg-surface-overlay p-0.5 shadow-1">
-      <ActionButton
-        onClick={handleCopy}
-        label={copied ? "Copied" : "Copy"}
-        icon={
-          copied ? (
-            <Check size={12} strokeWidth={3} />
-          ) : (
-            <Copy size={12} />
-          )
-        }
-        success={copied}
-      />
+      <Tooltip label={copied ? "Copied" : "Copy"}>
+        <ActionButton
+          onClick={handleCopy}
+          label={copied ? "Copied" : "Copy"}
+          icon={
+            copied ? (
+              <Check size={12} strokeWidth={3} />
+            ) : (
+              <Copy size={12} />
+            )
+          }
+          success={copied}
+        />
+      </Tooltip>
 
       {!isUser && isLastAssistant && onRegenerate && (
-        <ActionButton
-          onClick={onRegenerate}
-          label="Regenerate"
-          icon={<RefreshCw size={12} />}
-        />
+        <Tooltip label="Regenerate response">
+          <ActionButton
+            onClick={onRegenerate}
+            label="Regenerate"
+            icon={<RefreshCw size={12} />}
+          />
+        </Tooltip>
       )}
 
       {!isUser && onReact && (
         <>
-          <ActionButton
-            onClick={() => onReact("up")}
-            label="Helpful"
-            active={reaction === "up"}
-            icon={<ThumbsUp size={12} />}
-          />
-          <ActionButton
-            onClick={() => onReact("down")}
-            label="Not helpful"
-            active={reaction === "down"}
-            icon={<ThumbsDown size={12} />}
-          />
+          <Tooltip label={reaction === "up" ? "Remove helpful" : "Helpful"}>
+            <ActionButton
+              onClick={() => onReact("up")}
+              label="Helpful"
+              active={reaction === "up"}
+              pressed={reaction === "up"}
+              icon={<ThumbsUp size={12} />}
+            />
+          </Tooltip>
+          <Tooltip label={reaction === "down" ? "Remove not helpful" : "Not helpful"}>
+            <ActionButton
+              onClick={() => onReact("down")}
+              label="Not helpful"
+              active={reaction === "down"}
+              pressed={reaction === "down"}
+              icon={<ThumbsDown size={12} />}
+            />
+          </Tooltip>
         </>
       )}
 
       {isUser && onEdit && (
-        <ActionButton
-          onClick={onEdit}
-          label="Edit"
-          icon={<Pencil size={12} />}
-        />
+        <Tooltip label="Edit message">
+          <ActionButton
+            onClick={onEdit}
+            label="Edit"
+            icon={<Pencil size={12} />}
+          />
+        </Tooltip>
       )}
     </div>
   );
 }
 
-function ActionButton({ onClick, label, icon, active = false, success = false }) {
+function ActionButton({ onClick, label, icon, active = false, success = false, pressed }) {
   return (
     <button
       type="button"
       onClick={onClick}
       aria-label={label}
+      aria-pressed={pressed}
       title={label}
       className={`inline-flex h-7 w-7 items-center justify-center rounded-md transition ${
         success

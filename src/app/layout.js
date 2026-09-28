@@ -20,6 +20,13 @@ export const metadata = {
 
   description:
     "One intelligent workspace for chatting, researching, writing, and working with powerful AI models.",
+
+  icons: {
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+    ],
+    apple: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({ children }) {

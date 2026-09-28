@@ -92,6 +92,7 @@ export default function ChatInput({
               value={message}
               onChange={(e) => setMessage(e.target.value.slice(0, MAX_LENGTH))}
               onKeyDown={handleKeyDown}
+              data-chat-input=""
               placeholder={
                 isStreaming ? "Assistant is responding..." : "Message EchoGPT..."
               }
