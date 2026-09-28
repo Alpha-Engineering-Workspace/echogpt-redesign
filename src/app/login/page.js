@@ -19,7 +19,7 @@ const models = [
 
 export default function LoginPage() {
   return (
-    <main className="relative flex min-h-screen bg-bg">
+    <main className="relative flex h-screen min-h-screen overflow-hidden bg-bg">
       {/* Soft ambient backdrop — same gradient language as landing */}
       <div
         className="pointer-events-none fixed inset-0 -z-10"
@@ -31,7 +31,7 @@ export default function LoginPage() {
       />
 
       {/* Left marketing panel */}
-      <aside className="relative hidden overflow-hidden border-r border-border bg-surface lg:flex lg:w-[52%] lg:flex-col lg:justify-between lg:p-12 xl:p-14">
+      <aside className="relative hidden h-screen min-h-screen overflow-hidden border-r border-border bg-surface lg:flex lg:w-[52%] lg:flex-col lg:justify-between lg:p-12 xl:p-14">
         {/* Decorative grid + glow */}
         <div
           className="pointer-events-none absolute inset-0 -z-0 opacity-40 dark:opacity-[0.18]"
@@ -70,10 +70,10 @@ export default function LoginPage() {
           </Link>
         </div>
 
-        {/* Main copy + chat preview */}
-        <div className="relative z-10 space-y-8">
+        {/* Main copy + chat preview — scrollable middle column */}
+        <div className="relative z-10 flex min-h-0 flex-1 flex-col space-y-6 overflow-y-auto pt-6 lg:pt-10">
           {/* Status badge */}
-          <div className="inline-flex items-center gap-2 rounded-full border border-border bg-surface-elevated px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-fg shadow-1">
+          <div className="inline-flex w-fit items-center gap-2 rounded-full border border-border bg-surface-elevated px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-fg shadow-1">
             <span className="relative inline-flex h-2 w-2">
               <span className="absolute inset-0 rounded-full bg-success animate-pulse-dot" />
             </span>
@@ -190,7 +190,7 @@ export default function LoginPage() {
       </aside>
 
       {/* Right form */}
-      <section className="relative flex w-full items-center justify-center px-4 py-10 lg:w-[48%] lg:px-12 xl:px-16">
+      <section className="relative flex h-screen min-h-screen w-full items-center justify-center overflow-y-auto px-4 py-6 lg:w-[48%] lg:px-12 xl:px-16">
         {/* Subtle right-side gradient wash */}
         <div
           className="pointer-events-none absolute right-0 top-0 -z-10 h-[400px] w-[500px]"
@@ -203,7 +203,7 @@ export default function LoginPage() {
 
         <div className="w-full max-w-[400px]">
           {/* Mobile header */}
-          <div className="mb-8 flex items-center justify-between lg:hidden">
+          <div className="mb-5 flex items-center justify-between lg:hidden">
             <Logo />
             <Link
               href="/"
@@ -229,7 +229,7 @@ export default function LoginPage() {
           </p>
 
           {/* Form card */}
-          <div className="mt-7 overflow-hidden rounded-xl border border-border bg-surface-elevated shadow-pop">
+          <div className="mt-5 overflow-hidden rounded-xl border border-border bg-surface-elevated shadow-pop">
             {/* Top accent stripe */}
             <div
               className="h-[2px]"
@@ -240,13 +240,13 @@ export default function LoginPage() {
               aria-hidden="true"
             />
 
-            <div className="p-6 sm:p-7">
+            <div className="p-5 sm:p-6">
               <LoginForm />
             </div>
           </div>
 
           {/* Below-card footer */}
-          <div className="mt-6 flex items-center justify-between text-[11px] text-muted-foreground">
+          <div className="mt-4 flex items-center justify-between text-[11px] text-muted-foreground">
             <span>
               Don&apos;t have an account?{" "}
               <Link

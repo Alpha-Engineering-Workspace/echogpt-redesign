@@ -27,7 +27,7 @@ const models = [
 
 export default function RegisterPage() {
   return (
-    <main className="relative flex min-h-screen bg-bg">
+    <main className="relative flex h-screen min-h-screen overflow-hidden bg-bg">
       {/* Soft ambient backdrop */}
       <div
         className="pointer-events-none fixed inset-0 -z-10"
@@ -39,7 +39,7 @@ export default function RegisterPage() {
       />
 
       {/* Right form panel (mirror of login) */}
-      <section className="relative flex w-full items-center justify-center px-4 py-10 lg:w-[48%] lg:order-1 lg:px-12 xl:px-16">
+      <section className="relative flex h-screen min-h-screen w-full items-center justify-center overflow-y-auto px-4 py-6 lg:w-[48%] lg:order-1 lg:px-12 xl:px-16">
         {/* Subtle left-side gradient wash */}
         <div
           className="pointer-events-none absolute left-0 top-0 -z-10 h-[400px] w-[500px]"
@@ -52,7 +52,7 @@ export default function RegisterPage() {
 
         <div className="w-full max-w-[400px]">
           {/* Mobile header */}
-          <div className="mb-8 flex items-center justify-between lg:hidden">
+          <div className="mb-5 flex items-center justify-between lg:hidden">
             <Logo />
             <Link
               href="/"
@@ -78,7 +78,7 @@ export default function RegisterPage() {
           </p>
 
           {/* Form card */}
-          <div className="mt-7 overflow-hidden rounded-xl border border-border bg-surface-elevated shadow-pop">
+          <div className="mt-5 overflow-hidden rounded-xl border border-border bg-surface-elevated shadow-pop">
             {/* Top accent stripe */}
             <div
               className="h-[2px]"
@@ -89,13 +89,13 @@ export default function RegisterPage() {
               aria-hidden="true"
             />
 
-            <div className="p-6 sm:p-7">
+            <div className="p-5 sm:p-6">
               <RegisterForm />
             </div>
           </div>
 
           {/* Below-card footer */}
-          <div className="mt-6 flex items-center justify-between text-[11px] text-muted-foreground">
+          <div className="mt-4 flex items-center justify-between text-[11px] text-muted-foreground">
             <span>
               Already have an account?{" "}
               <Link
@@ -117,7 +117,7 @@ export default function RegisterPage() {
       </section>
 
       {/* Left marketing panel */}
-      <aside className="relative hidden overflow-hidden border-l border-border bg-surface lg:flex lg:w-[52%] lg:order-2 lg:flex-col lg:justify-between lg:p-12 xl:p-14">
+      <aside className="relative hidden h-screen min-h-screen overflow-hidden border-l border-border bg-surface lg:flex lg:w-[52%] lg:order-2 lg:flex-col lg:justify-between lg:p-12 xl:p-14">
         {/* Decorative grid + glow (mask flipped to bottom right) */}
         <div
           className="pointer-events-none absolute inset-0 -z-0 opacity-40 dark:opacity-[0.18]"
@@ -156,9 +156,9 @@ export default function RegisterPage() {
           </Link>
         </div>
 
-        {/* Main copy + extension showcase */}
-        <div className="relative z-10 space-y-8">
-          <div className="inline-flex items-center gap-2 rounded-full border border-accent/30 bg-accent-soft-strong px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-accent">
+        {/* Main copy + extension showcase — scrollable middle column */}
+        <div className="relative z-10 flex min-h-0 flex-1 flex-col space-y-6 overflow-y-auto pt-6 lg:pt-10">
+          <div className="inline-flex w-fit items-center gap-2 rounded-full border border-accent/30 bg-accent-soft-strong px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-accent">
             <Puzzle size={10} strokeWidth={2.5} />
             Free forever · No credit card
           </div>
